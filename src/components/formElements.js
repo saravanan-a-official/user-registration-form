@@ -7,13 +7,35 @@ import { formOnSubmit } from "../Redux/action";
 import * as CommonConstants from "../common/commonConstants";
 import Table from "react-bootstrap/Table";
 import "bootstrap/dist/css/bootstrap.css";
+import "../App.css"
 function FormElements() {
   const [dummyState, updateDummyState] = useState(
     CommonConstants.INITIAL_STATE
   );
   const dispatch = useDispatch();
+
+  function validateFieldData(data) {
+    if (data["firstName"].match(/[a-zA-Z]/g)) {
+      if (data["middleName"].match(/[a-zA-Z]/g)) {
+        if (data["lastName"].match(/[a-zA-Z]/g)) {
+          if (data["age"].match(/[0-9]/g)) {
+            return true;
+          }
+        }
+      }
+    }
+    return false
+  }
+
   const updateLocalState = (e) => {
-    const nextState = { ...dummyState, [e.target.name]: e.target.value };
+    var nextState = { ...dummyState, [e.target.name]: e.target.value };
+    var validationStatus = false;
+    validationStatus = validateFieldData(nextState);
+    console.log(validationStatus)
+    if (validationStatus)
+      nextState = { ...nextState, formValidation: true }
+    else
+      nextState = { ...nextState, formValidation: false }
     updateDummyState(nextState);
   };
   return (
@@ -35,7 +57,7 @@ function FormElements() {
             <input
               name="firstName"
               type="text"
-              required={true}
+
               onChange={updateLocalState}
               value={dummyState.firstName}
             />
@@ -50,7 +72,7 @@ function FormElements() {
             <input
               name="middleName"
               type="text"
-              required={true}
+
               onChange={updateLocalState}
               value={dummyState.middleName}
             />
@@ -65,7 +87,7 @@ function FormElements() {
             <input
               name="lastName"
               type="text"
-              required={true}
+
               onChange={updateLocalState}
               value={dummyState.lastName}
             />
@@ -79,8 +101,8 @@ function FormElements() {
           <td>
             <input
               name="age"
-              type="text"
-              required={true}
+              type="number"
+
               onChange={updateLocalState}
               value={dummyState.age}
             />
@@ -89,13 +111,11 @@ function FormElements() {
 
         <tr>
           <td colSpan="2">
-            {" "}
-            <Link to="/registersuccess">
+            < Link to="/registersuccess" className={dummyState.formValidation ? '' : 'disabled-link'}>
               <Button
                 variant="primary"
-                onClick={() => {
-                  dispatch(formOnSubmit(dummyState));
-                }}
+                disabled={!dummyState.formValidation}
+                onClick={() => dispatch(formOnSubmit(dummyState))}
               >
                 Sign up
               </Button>
@@ -103,7 +123,7 @@ function FormElements() {
           </td>
         </tr>
       </tbody>
-    </Table>
+    </Table >
   );
 }
 export default FormElements;

@@ -11,3 +11,7 @@ table {
   margin-right: auto;
   width: 500px !important;
 }
+
+.disabled-link {
+  pointer-events: none;
+}

@@ -3,6 +3,7 @@ export const INITIAL_STATE = {
   middleName: "",
   lastName: "",
   age: "",
+  formValidation: false
 };
 
 export const SUBMIT_ACTION = "FORM_SUBMIT";
